@@ -32,7 +32,8 @@ public class EmployeeInputSourceConsumer {
         final Path path = FileSystems.getDefault().getPath(pathString);
 
         try (final Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
-            stream.skip(1).map(this::parseEmployeeLine).forEach(employeeConsumer);
+            stream.skip(1) // ignoring first line of csv file because it is headers
+                    .map(this::parseEmployeeLine).forEach(employeeConsumer);
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
@@ -41,6 +42,7 @@ public class EmployeeInputSourceConsumer {
     private EmployeeInput parseEmployeeLine(final String employeeInputString) {
 
         final String[] employeeAttributes = employeeInputString.split(columnDelimiter, 5);
+//        order of parameters in csv line
 //      * First Name;Last Name;Employee type(M for manager, D for developer);Project;Technology
         return new EmployeeInput(
                 employeeAttributes[0],
@@ -51,6 +53,7 @@ public class EmployeeInputSourceConsumer {
         );
     }
 
+    // handling list of skills is not required but good point for extension
     private Set<String> splitTechnology(final String technologiesString, final String technologyDelimiter) {
         final Set<String> technologyNames = new HashSet<>();
         final String[] technologies = technologiesString.split(technologyDelimiter);
