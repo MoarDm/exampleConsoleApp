@@ -2,14 +2,12 @@ package com.epam.amoi;
 
 import lombok.AllArgsConstructor;
 
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -27,16 +25,10 @@ public class MigrationService {
     }
 
     private String fetchInitializationScript() {
-        try {
-            final String pathString = Objects.requireNonNull(this.getClass().getClassLoader()
-                    .getResource("db/migration/initialize.sql"))
-                    .getPath();
-            final Path path = FileSystems.getDefault().getPath(pathString);
-            return Files.lines(path)
-                    .collect(Collectors.joining("\n"));
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
+        final InputStream in = getClass().getResourceAsStream("/db/migration/initialize.sql");
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        return reader.lines()
+                .collect(Collectors.joining("\n"));
     }
 
 }

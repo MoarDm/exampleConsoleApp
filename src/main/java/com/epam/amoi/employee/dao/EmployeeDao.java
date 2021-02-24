@@ -1,7 +1,7 @@
 package com.epam.amoi.employee.dao;
 
 import com.epam.amoi.employee.model.*;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.*;
@@ -55,7 +55,7 @@ public class EmployeeDao {
             final PreparedStatement selectEmployeesStatement = connection.prepareStatement(
                     "SELECT\n" +
                             "e.id,\n" +
-                            "e.FIRST_NAME,\n" +
+                            "e.first_name,\n" +
                             "e.last_name,\n" +
                             "e.employee_type,\n" +
                             "p.id,\n" +

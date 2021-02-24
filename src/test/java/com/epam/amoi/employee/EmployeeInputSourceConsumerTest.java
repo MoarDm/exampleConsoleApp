@@ -18,7 +18,7 @@ public class EmployeeInputSourceConsumerTest {
     public void testParsingEmployees_1() {
 
         final EmployeeInputSourceConsumer employeeInputSourceConsumer =
-                new EmployeeInputSourceConsumer("file1.csv", ";", ",");
+                new EmployeeInputSourceConsumer("src/test/resources/file1.csv", ";", ",");
 
 
         final EmployeeInterceptorConsumer employeeInterceptorConsumer = new EmployeeInterceptorConsumer();
@@ -56,7 +56,7 @@ public class EmployeeInputSourceConsumerTest {
     public void testParsingEmployees_2() {
 
         final EmployeeInputSourceConsumer employeeInputSourceConsumer =
-                new EmployeeInputSourceConsumer("file2.csv", ";", ",");
+                new EmployeeInputSourceConsumer("src/test/resources/file2.csv", ";", ",");
 
 
         final EmployeeInterceptorConsumer employeeInterceptorConsumer = new EmployeeInterceptorConsumer();

@@ -1,8 +1,8 @@
 package com.epam.amoi.employee.dao;
 
 import com.epam.amoi.employee.model.Project;
-import com.sun.istack.internal.Nullable;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 

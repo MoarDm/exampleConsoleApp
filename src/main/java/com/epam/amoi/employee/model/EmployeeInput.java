@@ -1,7 +1,7 @@
 package com.epam.amoi.employee.model;
 
-import com.sun.istack.internal.Nullable;
 import lombok.Data;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 

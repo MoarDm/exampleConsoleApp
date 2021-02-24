@@ -6,12 +6,11 @@ import lombok.AllArgsConstructor;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -19,19 +18,28 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class EmployeeInputSourceConsumer {
 
-    private final String inputFilePath;
+    private final Path inputFilePath;
     private final String columnDelimiter;
     private final String listDelimiter;
 
+    public EmployeeInputSourceConsumer(final String inputFilePath, final String columnDelimiter, final String listDelimiter) {
+        this.columnDelimiter = columnDelimiter;
+        this.listDelimiter = listDelimiter;
+
+        final Path path = Paths.get(inputFilePath);
+
+        if (!path.toFile().exists()) {
+            throw new RuntimeException(path.toFile().getAbsolutePath() + " not exists");
+        }
+        if (!path.toFile().canRead()) {
+            throw new RuntimeException(path.toFile().getAbsolutePath() + " cannot be read");
+        }
+
+        this.inputFilePath = path;
+    }
 
     public void consume(final Consumer<EmployeeInput> employeeConsumer) {
-
-        final String pathString = Objects.requireNonNull(this.getClass().getClassLoader()
-                .getResource(inputFilePath))
-                .getPath();
-        final Path path = FileSystems.getDefault().getPath(pathString);
-
-        try (final Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
+        try (final Stream<String> stream = Files.lines(inputFilePath, StandardCharsets.UTF_8)) {
             stream.skip(1) // ignoring first line of csv file because it is headers
                     .map(this::parseEmployeeLine).forEach(employeeConsumer);
         } catch (final IOException e) {

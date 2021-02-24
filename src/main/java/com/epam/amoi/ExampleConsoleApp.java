@@ -3,6 +3,7 @@ package com.epam.amoi;
 import com.epam.amoi.employee.EmployeeInputSourceConsumer;
 import com.epam.amoi.employee.EmployeeService;
 
+import java.nio.file.InvalidPathException;
 import java.sql.Connection;
 
 public class ExampleConsoleApp {
@@ -13,6 +14,7 @@ public class ExampleConsoleApp {
     }
 
     public void start(final String[] args) {
+        // Area of improvement: Apache CLI or something better for parsing args
         switch (args.length) {
             case 0:
                 printAllPersonnel();
@@ -29,11 +31,16 @@ public class ExampleConsoleApp {
         try {
             final EmployeeInputSourceConsumer employeeInputSourceConsumer =
                     new EmployeeInputSourceConsumer(inputFilePath, ";", ",");
+            // Area of improvement: extract delimiters into properties
+            System.out.println("Saving employees");
             employeeInputSourceConsumer.consume(employeeService::create);
+            // Area of improvement: show progress of importing
+            // Area of improvement: batch saving
+        } catch (final InvalidPathException e) {
+            printError("File path '" + inputFilePath + "' not found");
         } catch (final RuntimeException e) {
             printError(e.getLocalizedMessage());
         }
-        // maybe extract into properties
     }
 
     private void printError(final String errorMessage) {
@@ -41,6 +48,7 @@ public class ExampleConsoleApp {
     }
 
     private void printAllPersonnel() {
-        // dao.selectAll()
+        System.out.println("Employees list:");
+        employeeService.select(500, 0).forEach(System.out::println);
     }
 }
