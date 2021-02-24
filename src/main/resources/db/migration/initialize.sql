@@ -16,10 +16,12 @@ CREATE TABLE IF NOT EXISTS project (
     project_name VARCHAR NOT NULL
 );
 
-
 CREATE TABLE IF NOT EXISTS employee2skill (
 	employee_id INTEGER NOT NULL,
 	skill_id INTEGER NOT NULL,
 	foreign key (employee_id) REFERENCES employee(id),
 	foreign key (skill_id) REFERENCES skill(id)
 );
+
+CREATE INDEX IF NOT EXISTS project_project_name ON project(project_name);
+CREATE INDEX IF NOT EXISTS skill_skill_name ON skill(skill_name);

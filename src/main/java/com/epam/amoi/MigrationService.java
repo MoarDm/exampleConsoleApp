@@ -1,6 +1,7 @@
 package com.epam.amoi;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -37,5 +38,13 @@ public class MigrationService {
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @SneakyThrows
+    public void clearDb() {
+        connection.prepareStatement("DELETE FROM employee2skill;").execute();
+        connection.prepareStatement("DELETE FROM skill;").execute();
+        connection.prepareStatement("DELETE FROM project;").execute();
+        connection.prepareStatement("DELETE FROM employee;").execute();
     }
 }

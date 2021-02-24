@@ -1,8 +1,7 @@
 package com.epam.amoi.employee.model;
 
+import com.sun.istack.internal.Nullable;
 import lombok.Data;
-
-import java.util.Set;
 
 @Data
 public class Employee {
@@ -11,6 +10,6 @@ public class Employee {
     private final String firstName;
     private final String lastName;
     private final EmployeeType employeeType;
+    @Nullable
     private final Project project;
-    private final Set<Technology> technology;
 }
