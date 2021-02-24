@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class EmployeeServiceTest {
 
@@ -32,7 +34,7 @@ public class EmployeeServiceTest {
         ds.setUser(DB_USER);
         ds.setPassword(DB_PASSWORD);
         final JdbcConnectionPool jdbcConnectionPool = JdbcConnectionPool.create(ds);
-        connection = jdbcConnectionPool.getConnection();
+        connection = spy(jdbcConnectionPool.getConnection());
         connection.setAutoCommit(false);
         final MigrationService migrationService = new MigrationService(connection);
         migrationService.initialize();
@@ -44,7 +46,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void testCreateWithProjectAnd2skills() {
+    public void testCreateWithProjectAnd2skills() throws SQLException {
         final EmployeeService employeeService = new EmployeeService(connection);
         final Set<String> skills = new HashSet<>();
         skills.add(".Net");
@@ -56,8 +58,12 @@ public class EmployeeServiceTest {
                 skills);
         employeeService.create(employeeInput);
 
+
+        reset(connection);
         final List<Employee> employees = employeeService.select(1000, 0);
+        verify(connection, times(1)).prepareStatement(any());
         final Employee employee = employees.get(0);
+
 
         assertThat(employee.toString()).matches(s ->
                 s.equals("John Doe, manager, British Telecom, .Net, Java")
@@ -65,7 +71,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void testCreateWithSkill() {
+    public void testCreateWithSkill() throws SQLException {
         final EmployeeService employeeService = new EmployeeService(connection);
         final Set<String> skills = new HashSet<>();
         skills.add("Java");
@@ -76,14 +82,18 @@ public class EmployeeServiceTest {
                 skills);
         employeeService.create(employeeInput);
 
+
+        reset(connection);
         final List<Employee> employees = employeeService.select(1000, 0);
+        verify(connection, times(1)).prepareStatement(any());
         final Employee employee = employees.get(0);
+
 
         assertThat(employee.toString()).isEqualTo("John Doe, manager, Java");
     }
 
     @Test
-    public void testCreateWithProject() {
+    public void testCreateWithProject() throws SQLException {
         final EmployeeService employeeService = new EmployeeService(connection);
         final Set<String> skills = new HashSet<>();
         final EmployeeInput employeeInput = new EmployeeInput(
@@ -94,8 +104,12 @@ public class EmployeeServiceTest {
                 skills);
         employeeService.create(employeeInput);
 
+
+        reset(connection);
         final List<Employee> employees = employeeService.select(1000, 0);
+        verify(connection, times(1)).prepareStatement(any());
         final Employee employee = employees.get(0);
+
 
         assertThat(employee.toString()).isEqualTo("John Doe, manager, British Telecom");
     }
